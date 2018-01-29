@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Pimcore\Sitemap\EventListener\SitemapGeneratorListener:
+        $generators: !tagged pimcore.sitemap.generator
