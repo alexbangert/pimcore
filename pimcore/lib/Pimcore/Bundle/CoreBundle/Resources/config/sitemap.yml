@@ -4,5 +4,19 @@ services:
         autoconfigure: true
         public: false
 
+    # Sitemap listener delegating to every registered sitemap generator
     Pimcore\Sitemap\EventListener\SitemapGeneratorListener:
         $generators: !tagged pimcore.sitemap.generator
+
+    # Filters
+    Pimcore\Sitemap\Document\Filter\DocumentPropertiesFilter: ~
+    Pimcore\Sitemap\Document\Filter\DocumentTypeFilter: ~
+    Pimcore\Sitemap\Document\Filter\PublishedFilter: ~
+    Pimcore\Sitemap\Document\Filter\SiteRootFilter: ~
+
+    # Processors
+    Pimcore\Sitemap\Document\Processor\DocumentPropertiesProcessor: ~
+
+    # Default document URL generator
+    Pimcore\Sitemap\Document\UrlGeneratorInterface: '@Pimcore\Sitemap\Document\UrlGenerator'
+    Pimcore\Sitemap\Document\UrlGenerator: ~
