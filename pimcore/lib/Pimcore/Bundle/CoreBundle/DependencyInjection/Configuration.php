@@ -98,6 +98,7 @@ class Configuration implements ConfigurationInterface
         $this->addCustomReportsNode($rootNode);
         $this->addMigrationsNode($rootNode);
         $this->addTargetingNode($rootNode);
+        $this->addSitemapsNode($rootNode);
 
         return $treeBuilder;
     }
@@ -693,5 +694,38 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+    }
+
+    private function addSitemapsNode(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('sitemaps')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('generators')
+                            ->useAttributeAsKey('name')
+                            ->prototype('array')
+                                ->beforeNormalization()
+                                    ->ifString()
+                                    ->then(function ($v) {
+                                        return [
+                                            'enabled'      => true,
+                                            'generator_id' => $v,
+                                        ];
+                                    })
+                                ->end()
+                                ->canBeDisabled()
+                                ->children()
+                                    ->scalarNode('generator_id')
+                                        ->cannotBeEmpty()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
     }
 }

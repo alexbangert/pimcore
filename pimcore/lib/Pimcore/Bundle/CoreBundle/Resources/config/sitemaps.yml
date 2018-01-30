@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    # Sitemap listener delegating to every registered sitemap generator
+    Pimcore\Sitemap\EventListener\SitemapGeneratorListener: ~
+
+    #
+    # DOCUMENTS
+    #
+
+    # Default filters for DocumentTreeGenerator
+    Pimcore\Sitemap\Document\Filter\PublishedFilter: ~
+    Pimcore\Sitemap\Document\Filter\DocumentPropertiesFilter: ~
+    Pimcore\Sitemap\Document\Filter\DocumentTypeFilter: ~
+    Pimcore\Sitemap\Document\Filter\SiteRootFilter: ~
+
+    # Default processors for DocumentTreeGenerator
+    Pimcore\Sitemap\Document\Processor\DocumentPropertiesProcessor: ~
+
+    # Default document URL generator
+    Pimcore\Sitemap\Document\UrlGeneratorInterface: '@Pimcore\Sitemap\Document\UrlGenerator'
+    Pimcore\Sitemap\Document\UrlGenerator: ~
+
+    # Default document tree generator
+    Pimcore\Sitemap\Document\DocumentTreeGenerator:
+        arguments:
+            $filters:
+                - '@Pimcore\Sitemap\Document\Filter\PublishedFilter'
+                - '@Pimcore\Sitemap\Document\Filter\DocumentPropertiesFilter'
+                - '@Pimcore\Sitemap\Document\Filter\DocumentTypeFilter'
+                - '@Pimcore\Sitemap\Document\Filter\SiteRootFilter'
+            $processors:
+                - '@Pimcore\Sitemap\Document\Processor\DocumentPropertiesProcessor'

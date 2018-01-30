@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SitemapGeneratorListener implements EventSubscriberInterface
 {
     /**
-     * @var GeneratorInterface[]
+     * @var \Iterator|GeneratorInterface[]
      */
     private $generators;
 

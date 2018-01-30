@@ -29,7 +29,6 @@ use Pimcore\Bundle\CoreBundle\DependencyInjection\Compiler\SessionConfiguratorPa
 use Pimcore\Bundle\CoreBundle\DependencyInjection\Compiler\TemplateVarsProviderPass;
 use Pimcore\Bundle\CoreBundle\DependencyInjection\Compiler\TemplatingEngineAwareHelperPass;
 use Pimcore\Bundle\CoreBundle\DependencyInjection\Compiler\WebDebugToolbarListenerPass;
-use Pimcore\Sitemap\GeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -77,9 +76,5 @@ class PimcoreCoreBundle extends Bundle
         $container->addCompilerPass(new MonologPublicLoggerPass());
         $container->addCompilerPass(new MonologPsrLogMessageProcessorPass());
         $container->addCompilerPass(new ComposerConfigNormalizersPass());
-
-        $container
-            ->registerForAutoconfiguration(GeneratorInterface::class)
-            ->addTag('pimcore.sitemap.generator');
     }
 }
