@@ -50,6 +50,11 @@ class DocumentTreeGenerator implements GeneratorInterface
      */
     private $processors = [];
 
+    /**
+     * @var int
+     */
+    private $currentBatchCount = 0;
+
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         array $filters = [],
@@ -112,16 +117,18 @@ class DocumentTreeGenerator implements GeneratorInterface
     protected function configureOptions(OptionsResolver $options)
     {
         $options->setDefaults([
-            'rootId'              => 1,
-            'handleMainDomain'    => true,
-            'handleSites'         => true,
-            'urlGeneratorOptions' => []
+            'rootId'                  => 1,
+            'handleMainDomain'        => true,
+            'handleSites'             => true,
+            'urlGeneratorOptions'     => [],
+            'garbageCollectThreshold' => 50,
         ]);
 
         $options->setAllowedTypes('rootId', 'int');
         $options->setAllowedTypes('handleMainDomain', 'bool');
         $options->setAllowedTypes('handleSites', 'bool');
         $options->setAllowedTypes('urlGeneratorOptions', 'array');
+        $options->setAllowedTypes('garbageCollectThreshold', 'int');
     }
 
     public function populate(UrlContainerInterface $container, string $section = null)
@@ -189,6 +196,11 @@ class DocumentTreeGenerator implements GeneratorInterface
 
         if ($this->canBeAdded($document, $site)) {
             yield $document;
+
+            if (++$this->currentBatchCount >= $this->options['garbageCollectThreshold']) {
+                $this->currentBatchCount = 0;
+                \Pimcore::collectGarbage();
+            }
         }
 
         if ($this->handlesChildren($document, $site)) {
@@ -196,9 +208,6 @@ class DocumentTreeGenerator implements GeneratorInterface
                 yield from $this->visit($child);
             }
         }
-
-        unset($document);
-        \Pimcore::collectGarbage();
     }
 
     private function canBeAdded(Document $document, Site $site = null): bool
