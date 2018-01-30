@@ -165,6 +165,10 @@ class DocumentTreeGenerator implements GeneratorInterface
 
         foreach ($this->processors as $processor) {
             $url = $processor->process($url, $document, $site);
+
+            if (null === $url) {
+                break;
+            }
         }
 
         return $url;

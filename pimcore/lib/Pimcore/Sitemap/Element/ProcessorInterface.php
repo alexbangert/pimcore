@@ -22,5 +22,13 @@ use Presta\SitemapBundle\Sitemap\Url\Url;
 
 interface ProcessorInterface
 {
-    public function process(Url $url, AbstractElement $element): Url;
+    /**
+     * Processes an URL. The processor is expected to return the same or a new URL instance or null
+     *
+     * @param Url $url
+     * @param AbstractElement $element
+     *
+     * @return Url|null
+     */
+    public function process(Url $url, AbstractElement $element);
 }

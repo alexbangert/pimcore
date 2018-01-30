@@ -38,7 +38,7 @@ class ElementProcessorDecorator implements ProcessorInterface
         $this->processor = $processor;
     }
 
-    public function process(Url $url, Document $document, Site $site = null): Url
+    public function process(Url $url, Document $document, Site $site = null)
     {
         return $this->processor->process($url, $document);
     }
