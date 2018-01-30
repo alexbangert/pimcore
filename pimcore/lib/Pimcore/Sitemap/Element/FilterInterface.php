@@ -15,14 +15,13 @@ declare(strict_types=1);
  * @license    http://www.pimcore.org/license     GPLv3 and PEL
  */
 
-namespace Pimcore\Sitemap\Document;
+namespace Pimcore\Sitemap\Element;
 
-use Pimcore\Model\Document;
-use Pimcore\Model\Site;
+use Pimcore\Model\Element\AbstractElement;
 
 interface FilterInterface
 {
-    public function canBeAdded(Document $document, Site $site = null): bool;
+    public function canBeAdded(AbstractElement $element): bool;
 
-    public function handlesChildren(Document $document, Site $site = null): bool;
+    public function handlesChildren(AbstractElement $element): bool;
 }

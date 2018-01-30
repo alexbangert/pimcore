@@ -15,33 +15,33 @@ declare(strict_types=1);
  * @license    http://www.pimcore.org/license     GPLv3 and PEL
  */
 
-namespace Pimcore\Sitemap\Document\Processor;
+namespace Pimcore\Sitemap\Element\Processor;
 
-use Pimcore\Model\Document;
-use Pimcore\Model\Site;
-use Pimcore\Sitemap\Document\ProcessorInterface;
+use Pimcore\Model\Element\AbstractElement;
+use Pimcore\Sitemap\Element\ProcessorInterface;
 use Presta\SitemapBundle\Sitemap\Url\Url;
 use Presta\SitemapBundle\Sitemap\Url\UrlConcrete;
 
-class DocumentPropertiesProcessor implements ProcessorInterface
+/**
+ * Adds change frequency and priority entries based on document properties.
+ */
+class PropertiesProcessor implements ProcessorInterface
 {
     const PROPERTY_CHANGE_FREQUENCY = 'sitemaps_changefreq';
     const PROPERTY_PRIORITY = 'sitemaps_priority';
 
-    public function process(Url $url, Document $document, Site $site = null): Url
+    public function process(Url $url, AbstractElement $element): Url
     {
         if (!$url instanceof UrlConcrete) {
             return $url;
         }
 
-        $url->setLastmod(\DateTime::createFromFormat('U', (string)$document->getModificationDate()));
-
-        $changeFreq = $document->getProperty(self::PROPERTY_CHANGE_FREQUENCY);
+        $changeFreq = $element->getProperty(self::PROPERTY_CHANGE_FREQUENCY);
         if (!empty($changeFreq)) {
             $url->setChangefreq($changeFreq);
         }
 
-        $priority = $document->getProperty(self::PROPERTY_PRIORITY);
+        $priority = $element->getProperty(self::PROPERTY_PRIORITY);
         if (!empty($priority)) {
             $url->setPriority($priority);
         }

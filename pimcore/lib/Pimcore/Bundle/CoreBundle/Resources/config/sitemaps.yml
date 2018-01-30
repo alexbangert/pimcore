@@ -4,21 +4,32 @@ services:
         autoconfigure: true
         public: false
 
-    # Sitemap listener delegating to every registered sitemap generator
+    # Sitemap listener delegating work to configured generators
     Pimcore\Sitemap\EventListener\SitemapGeneratorListener: ~
+
+
+    #
+    # ELEMENTS
+    #
+    # Services valid for all elements
+
+    # Filters
+    Pimcore\Sitemap\Element\Filter\PropertiesFilter: ~
+
+    # Processors
+    Pimcore\Sitemap\Element\Processor\ModificationDateProcessor: ~
+    Pimcore\Sitemap\Element\Processor\PropertiesProcessor: ~
+
 
     #
     # DOCUMENTS
     #
+    # Services valid for documents
 
     # Default filters for DocumentTreeGenerator
     Pimcore\Sitemap\Document\Filter\PublishedFilter: ~
-    Pimcore\Sitemap\Document\Filter\DocumentPropertiesFilter: ~
     Pimcore\Sitemap\Document\Filter\DocumentTypeFilter: ~
     Pimcore\Sitemap\Document\Filter\SiteRootFilter: ~
-
-    # Default processors for DocumentTreeGenerator
-    Pimcore\Sitemap\Document\Processor\DocumentPropertiesProcessor: ~
 
     # Default document URL generator
     Pimcore\Sitemap\Document\UrlGeneratorInterface: '@Pimcore\Sitemap\Document\UrlGenerator'
@@ -29,8 +40,9 @@ services:
         arguments:
             $filters:
                 - '@Pimcore\Sitemap\Document\Filter\PublishedFilter'
-                - '@Pimcore\Sitemap\Document\Filter\DocumentPropertiesFilter'
+                - '@Pimcore\Sitemap\Element\Filter\PropertiesFilter'
                 - '@Pimcore\Sitemap\Document\Filter\DocumentTypeFilter'
                 - '@Pimcore\Sitemap\Document\Filter\SiteRootFilter'
             $processors:
-                - '@Pimcore\Sitemap\Document\Processor\DocumentPropertiesProcessor'
+                - '@Pimcore\Sitemap\Element\Processor\ModificationDateProcessor'
+                - '@Pimcore\Sitemap\Element\Processor\PropertiesProcessor'

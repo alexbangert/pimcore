@@ -15,40 +15,42 @@ declare(strict_types=1);
  * @license    http://www.pimcore.org/license     GPLv3 and PEL
  */
 
-namespace Pimcore\Sitemap\Document\Filter;
+namespace Pimcore\Sitemap\Element\Filter;
 
-use Pimcore\Model\Document;
-use Pimcore\Model\Site;
-use Pimcore\Sitemap\Document\FilterInterface;
+use Pimcore\Model\Element\AbstractElement;
+use Pimcore\Sitemap\Element\FilterInterface;
 
-class DocumentPropertiesFilter implements FilterInterface
+/**
+ * Filters element based on the sitemaps_exclude and sitemaps_exclude_children properties.
+ */
+class PropertiesFilter implements FilterInterface
 {
     const PROPERTY_EXCLUDE = 'sitemaps_exclude';
     const PROPERTY_EXCLUDE_CHILDREN = 'sitemaps_exclude_children';
 
-    public function canBeAdded(Document $document, Site $site = null): bool
+    public function canBeAdded(AbstractElement $element): bool
     {
-        if ($this->getBoolProperty($document, self::PROPERTY_EXCLUDE)) {
+        if ($this->getBoolProperty($element, self::PROPERTY_EXCLUDE)) {
             return false;
         }
 
         return true;
     }
 
-    public function handlesChildren(Document $document, Site $site = null): bool
+    public function handlesChildren(AbstractElement $element): bool
     {
-        if (!$this->canBeAdded($document, $site)) {
+        if (!$this->canBeAdded($element)) {
             return false;
         }
 
-        if ($this->getBoolProperty($document, self::PROPERTY_EXCLUDE_CHILDREN)) {
+        if ($this->getBoolProperty($element, self::PROPERTY_EXCLUDE_CHILDREN)) {
             return false;
         }
 
         return true;
     }
 
-    private function getBoolProperty(Document $document, string $property): bool
+    private function getBoolProperty(AbstractElement $document, string $property): bool
     {
         if (!$document->hasProperty($property)) {
             return false;

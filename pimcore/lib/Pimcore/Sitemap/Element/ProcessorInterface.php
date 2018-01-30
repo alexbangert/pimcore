@@ -15,14 +15,12 @@ declare(strict_types=1);
  * @license    http://www.pimcore.org/license     GPLv3 and PEL
  */
 
-namespace Pimcore\Sitemap\Document;
+namespace Pimcore\Sitemap\Element;
 
-use Pimcore\Model\Document;
-use Pimcore\Model\Site;
+use Pimcore\Model\Element\AbstractElement;
+use Presta\SitemapBundle\Sitemap\Url\Url;
 
-interface FilterInterface
+interface ProcessorInterface
 {
-    public function canBeAdded(Document $document, Site $site = null): bool;
-
-    public function handlesChildren(Document $document, Site $site = null): bool;
+    public function process(Url $url, AbstractElement $element): Url;
 }

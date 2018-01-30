@@ -19,6 +19,10 @@ namespace Pimcore\Sitemap\Document;
 
 use Pimcore\Model\Document;
 use Pimcore\Model\Site;
+use Pimcore\Sitemap\Document\Filter\ElementFilterDecorator;
+use Pimcore\Sitemap\Document\Processor\ElementProcessorDecorator;
+use Pimcore\Sitemap\Element\FilterInterface as ElementFilterInterface;
+use Pimcore\Sitemap\Element\ProcessorInterface as ElementProcessorInterface;
 use Pimcore\Sitemap\GeneratorInterface;
 use Presta\SitemapBundle\Service\UrlContainerInterface;
 use Presta\SitemapBundle\Sitemap\Url\UrlConcrete;
@@ -69,13 +73,39 @@ class DocumentTreeGenerator implements GeneratorInterface
         $this->options = $optionsResolver->resolve($options);
     }
 
-    public function addFilter(FilterInterface $filter)
+    public function addFilter($filter)
     {
+        // wrap filter in ElementFilterDecorator if an element filter was passed
+        if ($filter instanceof ElementFilterInterface) {
+            $filter = new ElementFilterDecorator($filter);
+        }
+
+        if (!$filter instanceof FilterInterface) {
+            throw new \InvalidArgumentException(sprintf(
+                'Filter needs to implement "%s" or "%s"',
+                FilterInterface::class,
+                ElementFilterInterface::class
+            ));
+        }
+
         $this->filters[] = $filter;
     }
 
-    public function addProcessor(ProcessorInterface $processor)
+    public function addProcessor($processor)
     {
+        // wrap processor in ElementProcessorDecorator if an element processor was passed
+        if ($processor instanceof ElementProcessorInterface) {
+            $processor = new ElementProcessorDecorator($processor);
+        }
+
+        if (!$processor instanceof ProcessorInterface) {
+            throw new \InvalidArgumentException(sprintf(
+                'Processor needs to implement "%s" or "%s"',
+                ProcessorInterface::class,
+                ElementProcessorInterface::class
+            ));
+        }
+
         $this->processors[] = $processor;
     }
 
@@ -158,7 +188,7 @@ class DocumentTreeGenerator implements GeneratorInterface
         }
 
         if ($this->handlesChildren($document, $site)) {
-            foreach ($document->getChildren(false) as $child) {
+            foreach ($document->getChildren() as $child) {
                 yield from $this->visit($child);
             }
         }

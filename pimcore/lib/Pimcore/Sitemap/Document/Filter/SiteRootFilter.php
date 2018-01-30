@@ -21,6 +21,10 @@ use Pimcore\Model\Document;
 use Pimcore\Model\Site;
 use Pimcore\Sitemap\Document\FilterInterface;
 
+/**
+ * Filters document if it is a site root, but doesn't match the current site. This used to exclude
+ * sites from the default section.
+ */
 class SiteRootFilter implements FilterInterface
 {
     /**
